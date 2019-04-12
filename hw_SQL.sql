@@ -34,12 +34,8 @@ SELECT first_name as "First Name", last_name as "Last Name"  FROM actor where la
     Select description from actor;
 
 # 3b. Very quickly you realize that entering descriptions for each actor is too much effort. Delete the description column.
-    # Turn off safe updates
-    SET Sql_safe_updates = 0;
-    # Delete description column
+   
     ALTER TABLE actor DROP COLUMN description;
-    # Turn on safe updates
-    SET SQL_SAFE_UPDATES = 1;
     Select * from actor;
 
 # 4a. List the last names of actors, as well as how many actors have that last name.
@@ -52,20 +48,36 @@ SELECT first_name as "First Name", last_name as "Last Name"  FROM actor where la
     having count(last_name) >= 2;
     
 # 4c. The actor HARPO WILLIAMS was accidentally entered in the actor table as GROUCHO WILLIAMS. Write a query to fix the record.
+   update actor
+   set first_name = "HARPO"
+   where last_name = "WILLIAMS" and first_name = "GROUCHO";
 
+# 4d. Perhaps we were too hasty in changing GROUCHO to HARPO. It turns out that GROUCHO was the correct name after all! In a single query, if the first name of the actor is currently HARPO, change it to GROUCHO.
+   update actor
+   set first_name = "GROUCHO"
+   where last_name = "WILLIAMS" and first_name = "HARPO";
+   
+# 5a. You cannot locate the schema of the address table. Which query would you use to re-create it?
+# Hint: https://dev.mysql.com/doc/refman/5.7/en/show-create-table.html
+  SHOW CREATE TABLE address;
 
-4d. Perhaps we were too hasty in changing GROUCHO to HARPO. It turns out that GROUCHO was the correct name after all! In a single query, if the first name of the actor is currently HARPO, change it to GROUCHO.
+# 6a. Use JOIN to display the first and last names, as well as the address, of each staff member. Use the tables staff and address:
+  select s.first_name as "First Name", s.last_name as "Last Name" , a.address as "Address"
+  from staff s
+  left join address a on a. address_id = s.address_id;
 
-5a. You cannot locate the schema of the address table. Which query would you use to re-create it?
+# 6b. Use JOIN to display the total amount rung up by each staff member in August of 2005. Use tables staff and payment.
+  select sum(p.amount) as "Total Amount"
+  from payment p 
+  left join staff s on p.staff_id = s.staff_id
+  where p.payment_date like "2005-08%"
+  group by p.staff_id;
 
-
-Hint: https://dev.mysql.com/doc/refman/5.7/en/show-create-table.html
-
-
-
-6a. Use JOIN to display the first and last names, as well as the address, of each staff member. Use the tables staff and address:
-6b. Use JOIN to display the total amount rung up by each staff member in August of 2005. Use tables staff and payment.
-6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. Use inner join.
+# 6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. Use inner join.
+  select f.title as "Film", count(fa.actor_id) as "Actor Count" 
+  from film f
+  join film_actor fa on f.film_id = fa.film_id
+  group by f.title;
 6d. How many copies of the film Hunchback Impossible exist in the inventory system?
 6e. Using the tables payment and customer and the JOIN command, list the total paid by each customer. List the customers alphabetically by last name:
 
