@@ -78,12 +78,51 @@ SELECT first_name as "First Name", last_name as "Last Name"  FROM actor where la
   from film f
   join film_actor fa on f.film_id = fa.film_id
   group by f.title;
-6d. How many copies of the film Hunchback Impossible exist in the inventory system?
-6e. Using the tables payment and customer and the JOIN command, list the total paid by each customer. List the customers alphabetically by last name:
+  
+# 6d. How many copies of the film Hunchback Impossible exist in the inventory system?
+  Select count(film_id) as "Film Copy"
+  from inventory
+  where film_id =
+  (select film_id from film
+   where title = "Hunchback Impossible"
+   );
+
+# 6e. Using the tables payment and customer and the JOIN command, list the total paid by each customer. List the customers alphabetically by last name:
+  select c.first_name as "First Name" , c.last_name as "First Name", sum(p.amount) as "Total Paid" 
+  from customer c
+  join payment p on  c.customer_id =  p.customer_id
+  group by c.customer_id
+  order by c.last_name ASC;
 
 7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
-7b. Use subqueries to display all actors who appear in the film Alone Trip.
-7c. You want to run an email marketing campaign in Canada, for which you will need the names and email addresses of all Canadian customers. Use joins to retrieve this information.
+   select title from film
+   where (title like 'K%' or title like 'Q%') 
+   and language_id =
+   (select language_id from language
+    where name ="English"
+   );
+
+# 7b. Use subqueries to display all actors who appear in the film Alone Trip.
+  select first_name as "First Name", last_name as "Last Name" 
+  from actor
+  where actor_id in
+  (select actor_id from film_actor
+  where film_id = 
+  (select film_id from film
+   where title = "Alone Trip"
+   )
+  );
+
+# 7c. You want to run an email marketing campaign in Canada, for which you will need the names and email addresses of all Canadian customers. Use joins to retrieve this information.
+
+select c.first_name as "First Name", c.last_name as "Last Name" ,c.email as Email
+from customer c
+join address a on c.address_id = a.address_id 
+join city ci on a.city_id = ci.city_id
+join country co on ci.country_id = co.country_id
+where country ="Canada";
+
+
 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as family films.
 7e. Display the most frequently rented movies in descending order.
 7f. Write a query to display how much business, in dollars, each store brought in.
