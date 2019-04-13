@@ -122,16 +122,36 @@ join city ci on a.city_id = ci.city_id
 join country co on ci.country_id = co.country_id
 where country ="Canada";
 
-7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as family films.
-select f.title from film f
-join film_category fc on f.film_id = fc.film_id 
-join category c on fc.category_id = c.category_id
-where c.name = "family";
+# 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as family films.
+  select f.title from film f
+  join film_category fc on f.film_id = fc.film_id 
+  join category c on fc.category_id = c.category_id
+  where c.name = "family";
 
-7e. Display the most frequently rented movies in descending order.
-7f. Write a query to display how much business, in dollars, each store brought in.
-7g. Write a query to display for each store its store ID, city, and country.
-7h. List the top five genres in gross revenue in descending order. (Hint: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
+# 7e. Display the most frequently rented movies in descending order.
+  select f.title from inventory i
+  left join film f on i.film_id = f.film_id 
+  group by i.film_id
+  order by count(i.film_id) desc;   
+  
+# 7f. Write a query to display how much business, in dollars, each store brought in.
+ select sum(p.amount) as "Total Amount",  s.store_id as "Store Id" from payment p
+ left join staff s on p.staff_id = s.staff_id
+ group by s.store_id;
+
+# 7g. Write a query to display for each store its store ID, city, and country.
+  Select s.store_id AS "Store Id", c.city as "City" ,  co.country as "Countyr" from store s
+  join address a on  s.address_id = a.address_id 
+  join  city c on    a.city_id = c.city_id
+  join  country co  on c.country_id = co.country_id;
+
+# 7h. List the top five genres in gross revenue in descending order. (Hint: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
+
+
 8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
+
+
 8b. How would you display the view that you created in 8a?
+
+
 8c. You find that you no longer need the view top_five_genres. Write a query to delete it.
