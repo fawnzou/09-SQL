@@ -122,8 +122,12 @@ join city ci on a.city_id = ci.city_id
 join country co on ci.country_id = co.country_id
 where country ="Canada";
 
-
 7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as family films.
+select f.title from film f
+join film_category fc on f.film_id = fc.film_id 
+join category c on fc.category_id = c.category_id
+where c.name = "family";
+
 7e. Display the most frequently rented movies in descending order.
 7f. Write a query to display how much business, in dollars, each store brought in.
 7g. Write a query to display for each store its store ID, city, and country.
