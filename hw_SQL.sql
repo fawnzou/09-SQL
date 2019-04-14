@@ -94,7 +94,7 @@ SELECT first_name as "First Name", last_name as "Last Name"  FROM actor where la
   group by c.customer_id
   order by c.last_name ASC;
 
-7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
+# 7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
    select title from film
    where (title like 'K%' or title like 'Q%') 
    and language_id =
@@ -146,12 +146,19 @@ where country ="Canada";
   join  country co  on c.country_id = co.country_id;
 
 # 7h. List the top five genres in gross revenue in descending order. (Hint: you may need to use the following tables: category, film_category, inventory, payment, and rental.)
+  select count(ca.name) as Genres from payment p
+  left join rental r on p.rental_id = r.rental_id
+  left join inventory i on i.inventory_id = r.inventory_id
+  left join film_category fc on fc.film_id = i.film_id
+  left join category ca on fc.category_id =ca.category_id
+  group by ca.name 
+  order by count(ca.name) desc
+  limit 5;
+
+#8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
 
 
-8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. If you haven't solved 7h, you can substitute another query to create a view.
+#8b. How would you display the view that you created in 8a?
 
 
-8b. How would you display the view that you created in 8a?
-
-
-8c. You find that you no longer need the view top_five_genres. Write a query to delete it.
+#8c. You find that you no longer need the view top_five_genres. Write a query to delete it.
